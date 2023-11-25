@@ -6,8 +6,8 @@ import boto3
 
 import datetime
 
-cloudwatch = boto3.client('cloudwatch')
-logs = boto3.client('logs')
+cloudwatch = boto3.client('cloudwatch', region_name='us-east-1')
+logs = boto3.client('logs', region_name='us-east-1')
 
 log_stream_name = 'LogStream'
 log_group_name = 'LogGroup'
