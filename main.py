@@ -21,43 +21,17 @@ except:
     pass
 
 
-def get_sequence_token():
-   response = logs.describe_log_streams(
-       logGroupName=log_group_name,
-       logStreamNamePrefix=log_stream_name
-   )
-   if 'uploadSequenceToken' in response['logStreams'][0]:
-       return response['logStreams'][0]['uploadSequenceToken']
-   else:
-       return None
-
-
 def send_log(operation : str):
-   sequence_token = get_sequence_token()
-   if sequence_token is None:
-       logs.put_log_events(
-           logGroupName=log_group_name,
-           logStreamName=log_stream_name,
-           logEvents=[
-               {
-                  'timestamp': int(time.time()),
-                  'message': f"A {operation} action"
-               },
-           ]
-       )
-   else:
-       logs.put_log_events(
-           logGroupName=log_group_name,
-           logStreamName=log_stream_name,
-           logEvents=[
-               {
-                  'timestamp': int(time.time()),
-                  'message': f"A {operation} action"
-               },
-           ],
-           sequenceToken=sequence_token
-       )
-
+    logs.put_log_events(
+        logGroupName=log_group_name,
+        logStreamName=log_stream_name,
+        logEvents=[
+            {
+               'timestamp': int(time.time()),
+               'message': f"A {operation} action"
+            },
+        ]
+    )
 
 def send_metric_plano(name, descricao, preco):
     cloudwatch.put_metric_data(
