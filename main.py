@@ -22,16 +22,17 @@ except:
 
 
 def send_log(operation : str):
-    logs.put_log_events(
+    response = logs.put_log_events(
         logGroupName=log_group_name,
         logStreamName=log_stream_name,
         logEvents=[
             {
                'timestamp': int(time.time()),
                'message': f"A {operation} action"
-            },
+            }
         ]
     )
+    print(response)
 
 def send_metric_plano(name, descricao, preco):
     cloudwatch.put_metric_data(
