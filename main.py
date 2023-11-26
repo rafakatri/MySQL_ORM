@@ -27,7 +27,7 @@ def send_log(operation : str):
         logStreamName=log_stream_name,
         logEvents=[
             {
-               'timestamp': int(time.time()),
+               'timestamp': int(time.time() * 1000),
                'message': f"A {operation} action"
             }
         ]
