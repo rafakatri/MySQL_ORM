@@ -66,17 +66,17 @@ def send_metric_plano(name, descricao, preco):
           {
               'MetricName': 'comprimento do nome',
               'Value': len(name),
-              'Unit': 'count'
+              'Unit': 'None'
           },
           {
               'MetricName': 'comprimento da descricao',
               'Value': len(descricao),
-              'Unit': 'count'
+              'Unit': 'None'
           },
           {
               'MetricName': 'Preco',
               'Value': preco,
-              'Unit': 'reais'
+              'Unit': 'None'
           },
       ]
   )
@@ -88,17 +88,17 @@ def send_metric_membro(name, id, data : datetime.date):
           {
               'MetricName': 'ano nascimento',
               'Value': int(data.year),
-              'Unit': 'ano'
+              'Unit': 'None'
           },
           {
               'MetricName': 'mes do nascimento',
               'Value': int(data.month),
-              'Unit': 'mes'
+              'Unit': 'None'
           },
           {
               'MetricName': 'dia do nascimento',
               'Value': int(data.day),
-              'Unit': 'dia'
+              'Unit': 'None'
           },
       ]
   )
