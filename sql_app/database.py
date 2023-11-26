@@ -28,7 +28,7 @@ mydb.commit()
 mydb.close()
 
 
-SQLALCHEMY_DATABASE_URL = f"mysql+mysqldb://{user}:{password}@{host}:3306/{database}"
+SQLALCHEMY_DATABASE_URL = f"mysql+mysqldb://{user}:{password}@{host}/{database}"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(
