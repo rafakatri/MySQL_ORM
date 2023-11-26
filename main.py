@@ -64,18 +64,18 @@ def send_metric_plano(name, descricao, preco):
       Namespace='Metrics',
       MetricData=[
           {
-              'MetricName': 'Nome',
-              'Value': f"{name}",
-              'Unit': 'string'
+              'MetricName': 'comprimento do nome',
+              'Value': len(name),
+              'Unit': 'count'
           },
           {
-              'MetricName': 'Descricao',
-              'Value': f"{descricao}",
-              'Unit': 'string'
+              'MetricName': 'comprimento da descricao',
+              'Value': len(descricao),
+              'Unit': 'count'
           },
           {
               'MetricName': 'Preco',
-              'Value': f"{preco}",
+              'Value': preco,
               'Unit': 'reais'
           },
       ]
@@ -86,19 +86,19 @@ def send_metric_membro(name, id, data : datetime.date):
       Namespace='Metrics',
       MetricData=[
           {
-              'MetricName': 'Nome',
-              'Value': f"{name}",
-              'Unit': 'string'
+              'MetricName': 'ano nascimento',
+              'Value': int(data.year),
+              'Unit': 'ano'
           },
           {
-              'MetricName': 'Id-plano',
-              'Value': f"{id}",
-              'Unit': 'id'
+              'MetricName': 'mes do nascimento',
+              'Value': int(data.month),
+              'Unit': 'mes'
           },
           {
-              'MetricName': 'nascimento',
-              'Value': f"{str(data)}",
-              'Unit': 'data'
+              'MetricName': 'dia do nascimento',
+              'Value': int(data.day),
+              'Unit': 'dia'
           },
       ]
   )
