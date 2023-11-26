@@ -35,7 +35,7 @@ def get_sequence_token():
 def send_log(operation : str):
    sequence_token = get_sequence_token()
    if sequence_token is None:
-       response = logs.put_log_events(
+       logs.put_log_events(
            logGroupName=log_group_name,
            logStreamName=log_stream_name,
            logEvents=[
@@ -46,7 +46,7 @@ def send_log(operation : str):
            ]
        )
    else:
-       response = logs.put_log_events(
+       logs.put_log_events(
            logGroupName=log_group_name,
            logStreamName=log_stream_name,
            logEvents=[
