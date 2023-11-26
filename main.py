@@ -2,8 +2,9 @@ from typing import Union
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import boto3
 
+import boto3
+import time
 import datetime
 
 cloudwatch = boto3.client('cloudwatch', region_name='us-east-1')
@@ -12,25 +13,51 @@ logs = boto3.client('logs', region_name='us-east-1')
 log_stream_name = 'LogStream'
 log_group_name = 'LogGroup'
 
+
+try:
+    logs.create_log_group(logGroupName=log_group_name)
+    logs.create_log_stream(logGroupName=log_group_name,logStreamName=log_stream_name)
+except:
+    pass
+
+
 def get_sequence_token():
    response = logs.describe_log_streams(
-       logGroupName = log_group_name ,
-       logStreamNamePrefix = log_stream_name
+       logGroupName=log_group_name,
+       logStreamNamePrefix=log_stream_name
    )
-   return response['logStreams'][0]['uploadSequenceToken']
+   if 'uploadSequenceToken' in response['logStreams'][0]:
+       return response['logStreams'][0]['uploadSequenceToken']
+   else:
+       return None
+
 
 def send_log(operation : str):
-     response = logs.put_log_events(
-      logGroupName=log_group_name,
-      logStreamName=log_stream_name,
-      logEvents=[
-          {
-              'time': str(datetime.datetime.now()),
-              'message': f"A {operation} action"
-          },
-      ],
-      sequenceToken=get_sequence_token()
-     )
+   sequence_token = get_sequence_token()
+   if sequence_token is None:
+       response = logs.put_log_events(
+           logGroupName=log_group_name,
+           logStreamName=log_stream_name,
+           logEvents=[
+               {
+                  'timestamp': int(time.time()),
+                  'message': f"A {operation} action"
+               },
+           ]
+       )
+   else:
+       response = logs.put_log_events(
+           logGroupName=log_group_name,
+           logStreamName=log_stream_name,
+           logEvents=[
+               {
+                  'timestamp': int(time.time()),
+                  'message': f"A {operation} action"
+               },
+           ],
+           sequenceToken=sequence_token
+       )
+
 
 def send_metric_plano(name, descricao, preco):
     cloudwatch.put_metric_data(
@@ -125,7 +152,7 @@ def read_all_members():
     list_membros = []
     dict_membros = {}
     for membro in Membros.values():
-        dict_membros = {"id_membro": membro.id_membro, "nome": membro.nome, "id_plano": membro.id_plano, "data_nascimento": membro.data_nascimento}	
+        dict_membros = {"id_membro": membro.id_membro, "nome": membro.nome, "id_plano": membro.id_plano, "data_nascimento": membro.data_nascimento}
         list_membros.append(dict_membros)
     send_log("get member")
     return list_membros
@@ -169,7 +196,7 @@ def read_all_planos():
     list_planos = []
     dict_planos = {}
     for plano in Planos.values():
-        dict_planos = {"id_plano": plano.id_plano, "nome": plano.nome, "descricao": plano.descricao, "preco": plano.preco}	
+        dict_planos = {"id_plano": plano.id_plano, "nome": plano.nome, "descricao": plano.descricao, "preco": plano.preco}
         list_planos.append(dict_planos)
     send_log("get plano")
     return list_planos
@@ -188,4 +215,3 @@ def delete_plano(id_plano:int):
     del Planos[id_plano]
     send_log("delete plano")
     return {"id": id_plano, "success": "deleted"}
- 
